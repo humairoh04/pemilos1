@@ -4,449 +4,367 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>e-Voting Ketua OSIS — SMKN 1 AMPELGADING</title>
-  <style>
-    :root{
-  --bg-1: #071428;
-  --bg-2: #071a2a;
-  --card: rgba(255,255,255,0.03);
-  --muted: #9fb0c7;
-  --accent-1: #7c3aed;
-  --accent-2: #06b6d4;
-  --success: #10b981;
-  --danger: #ef4444;
-  --text: #eaf2fb;
-  --glass: rgba(255,255,255,0.03);
-  --radius: 14px;
-  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-}
+  <meta name="description" content="Sistem e-voting sederhana untuk pemilihan Ketua OSIS SMKN 1 AMPELGADING — form data pemilih, 3 kandidat, dan hasil voting." />
 
-/* Reset */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  background: radial-gradient(600px 300px at 10% 10%, rgba(124,58,237,0.08), transparent 15%),
-              radial-gradient(600px 300px at 90% 90%, rgba(6,182,212,0.05), transparent 15%),
-              linear-gradient(180deg,var(--bg-1),var(--bg-2));
-  color:var(--text);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  padding-bottom:40px;
-  line-height:1.35;
-}
-
-/* Layout container */
-.container{
-  width:92%;
-  max-width:1100px;
-  margin:0 auto;
-}
-
-/* Header */
-.header-inner{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:28px 0;
-}
-.brand h1{
-  margin:0;
-  font-size:20px;
-  letter-spacing:0.6px;
-  background: linear-gradient(90deg,var(--accent-1),var(--accent-2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.subtitle{
-  margin:6px 0 0 0;
-  color:var(--muted);
-  font-size:13px;
-}
-.header-meta .total-votes{
-  background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-  padding:10px 14px;
-  border-radius:10px;
-  font-weight:600;
-  color:var(--muted);
-}
-
-/* Main Grid */
-.main-grid{
-  display:grid;
-  grid-template-columns: 1fr 420px;
-  gap:26px;
-  align-items:start;
-  margin-top:10px;
-}
-
-/* Card */
-.card{
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border-radius: var(--radius);
-  padding:18px;
-  box-shadow: 0 6px 20px rgba(2,6,23,0.6);
-  border: 1px solid rgba(255,255,255,0.03);
-}
-
-/* Card head */
-.card-head h2{
-  margin:0 0 6px 0;
-  font-size:18px;
-}
-.card-head p.muted{
-  margin:0;
-  color:var(--muted);
-  font-size:13px;
-}
-
-/* Form styles */
-.vote-form .field{margin-top:14px}
-.field label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
-.field input[type="text"],
-.field input[type="email"]{
-  width:100%;
-  padding:10px 12px;
-  background:rgba(255,255,255,0.02);
-  border:1px solid rgba(255,255,255,0.03);
-  color:var(--text);
-  border-radius:10px;
-  outline:none;
-  transition:box-shadow .18s, border-color .18s;
-}
-.field input:focus{
-  box-shadow:0 6px 18px rgba(124,58,237,0.08);
-  border-color: rgba(124,58,237,0.6);
-}
-
-/* Field row */
-.field-row{
-  display:flex;
-  gap:12px;
-}
-.field-row .field{flex:1}
-
-/* Candidates */
-.candidates{
-  margin-top:16px;
-  display:flex;
-  gap:10px;
-  flex-direction:column;
-}
-.candidate-card{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:10px;
-  border-radius:10px;
-  cursor:pointer;
-  background: linear-gradient(90deg, rgba(255,255,255,0.01), transparent);
-  border:1px solid rgba(255,255,255,0.02);
-  transition:transform .12s, box-shadow .12s, border-color .12s;
-}
-.candidate-card input[type="radio"]{display:none}
-.candidate-card .candidate-info{display:flex;align-items:center;gap:12px}
-.candidate-card .candidate-name{font-weight:600}
-.candidate-card .candidate-desc{color:var(--muted);font-size:13px}
-.candidate-card:hover{transform:translateY(-4px); box-shadow: 0 12px 30px rgba(3,7,30,0.6);}
-
-/* Avatar variants */
-.avatar{
-  width:56px;
-  height:56px;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
-  color:white;
-  font-size:16px;
-}
-.avatar--c1{background: linear-gradient(135deg,#7c3aed,#5b21b6)}
-.avatar--c2{background: linear-gradient(135deg,#06b6d4,#0891b2)}
-.avatar--c3{background: linear-gradient(135deg,#f97316,#ef4444)}
-
-/* When selected radio */
-.candidate-card input:checked + .candidate-info,
-.candidate-card input:checked ~ .candidate-info { /* fallback */
-  border-left: 3px solid rgba(255,255,255,0.02);
-}
-
-/* Buttons */
-.form-actions{display:flex;gap:10px;margin-top:16px}
-.btn{
-  padding:10px 14px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.04);
-  background:transparent;
-  color:var(--text);
-  cursor:pointer;
-  font-weight:600;
-}
-.btn.primary{
-  background: linear-gradient(90deg,var(--accent-1),var(--accent-2));
-  border: none;
-  color: white;
-  box-shadow: 0 8px 26px rgba(7,12,40,0.5);
-}
-.btn.ghost{
-  background: rgba(255,255,255,0.02);
-}
-.btn.danger{
-  background: linear-gradient(90deg,#ef4444,#f97316);
-  color:white;
-  border:none;
-}
-
-/* Form message */
-.form-message{
-  margin-top:12px;
-  padding:10px 12px;
-  border-radius:10px;
-  color:var(--text);
-}
-.form-message.success{background: rgba(16,185,129,0.12); color:var(--success); border:1px solid rgba(16,185,129,0.12)}
-.form-message.error{background: rgba(239,68,68,0.08); color:var(--danger); border:1px solid rgba(239,68,68,0.06)}
-
-/* Results */
-.results-overview{display:flex;flex-direction:column;gap:12px;margin-top:8px}
-.candidate-result{
-  padding:10px;
-  border-radius:10px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.01), transparent);
-  border:1px solid rgba(255,255,255,0.02);
-}
-.result-head{display:flex;align-items:center;gap:12px}
-.result-head .small{width:44px;height:44px;border-radius:10px}
-.result-meta{flex:1}
-.percentage{font-weight:700;color:var(--muted)}
-.progress{height:10px;background:rgba(255,255,255,0.02);border-radius:10px;margin-top:8px;overflow:hidden}
-.progress-bar{
-  height:100%;
-  width:0%;
-  background: linear-gradient(90deg,var(--accent-1),var(--accent-2));
-  border-radius:10px;
-  transition:width .6s ease;
-}
-
-/* Smaller avatars */
-.avatar.small{width:44px;height:44px;border-radius:10px;font-size:13px}
-
-/* Table */
-.table-wrap{margin-top:10px; max-height:240px; overflow:auto; border-radius:10px}
-.voters-table{width:100%; border-collapse:collapse; font-size:13px; min-width:600px}
-.voters-table thead th{position:sticky; top:0; background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:8px; text-align:left; color:var(--muted)}
-.voters-table tbody td{padding:10px;border-top:1px solid rgba(255,255,255,0.02); color:var(--text)}
-.sep{border:none;height:1px;background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent); margin:12px 0}
-
-/* Admin actions */
-.admin-actions{display:flex;gap:10px;margin-top:12px;align-items:center}
-
-/* Footer */
-.site-footer{margin-top:28px;padding:18px 0;color:var(--muted);text-align:center;font-size:13px}
-
-/* Responsive */
-@media (max-width:980px){
-  .main-grid{grid-template-columns: 1fr; padding-bottom:30px}
-  aside{order:2}
-  .form-card{order:1}
-  .voters-table{min-width:0}
-  }
-  </style>
-  <meta name="description" content="Sistem e-voting sederhana untuk pemilihan Ketua OSIS SMKN 1 AMPELGADING — form data pemilih, 3 kandidat, dan hasil voting real-time." />
-
-  <!-- Google font -->
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root{
+      --bg:#071029;
+      --card:#07182a;
+      --muted:#97a6b8;
+      --accent-1:#7c3aed;
+      --accent-2:#06b6d4;
+      --accent-3:#f59e0b;
+      --glass: rgba(255,255,255,0.03);
+      --success:#10b981;
+      --danger:#ef4444;
+      --text:#e6eef7;
+      --radius:14px;
+      --maxWidth:1100px;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:
+        radial-gradient(600px 240px at 8% 12%, rgba(124,58,237,0.06), transparent 20%),
+        radial-gradient(500px 200px at 92% 88%, rgba(6,182,212,0.05), transparent 20%),
+        linear-gradient(180deg,#041021 0%, #071029 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:28px 16px 60px;
+    }
+
+    .container{
+      width:95%;
+      max-width:var(--maxWidth);
+      margin:0 auto;
+    }
+
+    header.site-header{
+      margin-bottom:20px;
+    }
+    .header-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .brand h1{
+      margin:0;
+      font-size:20px;
+      letter-spacing:0.6px;
+    }
+    .subtitle{
+      margin:4px 0 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .total-votes{
+      background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      padding:10px 14px;
+      border-radius:10px;
+      color:var(--muted);
+      font-weight:600;
+      font-size:14px;
+    }
+
+    main.main-grid{
+      display:grid;
+      grid-template-columns: 1fr 380px;
+      gap:20px;
+    }
+    @media (max-width:980px){
+      main.main-grid{grid-template-columns:1fr; }
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--radius);
+      padding:20px;
+      box-shadow: 0 6px 20px rgba(2,6,23,0.6);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    h2{margin:0 0 10px 0; font-size:18px}
+    .muted{color:var(--muted); font-size:13px}
+
+    /* Form style */
+    .vote-form .field{margin-bottom:12px}
+    label{display:block; font-size:13px; color:var(--muted); margin-bottom:6px}
+    input[type="text"], input[type="email"], input[type="tel"], select {
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.04);
+      background:rgba(255,255,255,0.02);
+      color:var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    .field-row{display:flex; gap:12px}
+    .field-row .field{flex:1}
+
+    fieldset.candidates{
+      border:none;
+      margin:10px 0 14px 0;
+      padding:0;
+    }
+    .candidate-card{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding:10px;
+      border-radius:10px;
+      cursor:pointer;
+      margin-bottom:10px;
+      transition:transform .12s ease, background .12s ease, box-shadow .12s ease;
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .candidate-card input{display:none}
+    .candidate-card:hover{transform:translateY(-4px)}
+    .candidate-card .candidate-info{display:flex; gap:12px; align-items:center}
+    .avatar{
+      width:56px;height:56px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:700;color:white;font-size:16px;
+      flex-shrink:0;
+      box-shadow:0 8px 18px rgba(2,6,23,0.6);
+    }
+    .avatar--c1{background:linear-gradient(135deg,var(--accent-1), #5b21b6)}
+    .avatar--c2{background:linear-gradient(135deg,var(--accent-2), #0ea5a4)}
+    .avatar--c3{background:linear-gradient(135deg,var(--accent-3), #b45309)}
+
+    .candidate-name{font-weight:700}
+    .candidate-desc{font-size:13px;color:var(--muted);max-width:420px}
+
+    .candidate-card input:checked + .candidate-info,
+    .candidate-card input:focus + .candidate-info {
+      outline:2px solid rgba(255,255,255,0.03);
+    }
+
+    .form-actions{display:flex; gap:12px; margin-top:8px}
+    .btn{
+      padding:10px 14px;border-radius:10px;border:none;cursor:pointer;
+      background:rgba(255,255,255,0.03); color:var(--text); font-weight:600;
+    }
+    .btn.primary{background:linear-gradient(90deg,var(--accent-1), var(--accent-2)); color:white; box-shadow:0 8px 18px rgba(7,12,34,0.6)}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04)}
+    .btn.danger{background:linear-gradient(90deg,#ef4444,#c026d3); color:white}
+    .btn:active{transform:translateY(1px)}
+
+    .form-message{margin-top:12px;padding:10px 12px;border-radius:10px;font-weight:600;display:inline-block}
+    .form-message.error{background:rgba(239,68,68,0.12); color:var(--danger)}
+    .form-message.success{background:rgba(16,185,129,0.08); color:var(--success)}
+
+    /* Results card */
+    .results-overview{display:flex;flex-direction:column;gap:12px}
+    .candidate-result{padding:10px;border-radius:10px;background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.02)}
+    .result-head{display:flex;align-items:center;gap:12px}
+    .avatar.small{width:44px;height:44px;border-radius:10px;font-size:14px}
+    .result-head .candidate-name{font-weight:700}
+    .result-head .percentage{margin-left:auto;font-weight:800}
+    .muted.small{color:var(--muted); font-size:13px}
+
+    .progress{height:10px;background:rgba(255,255,255,0.03);border-radius:10px;margin-top:8px;overflow:hidden}
+    .progress-bar{height:100%;background:linear-gradient(90deg, rgba(124,58,237,0.9), rgba(6,182,212,0.9)); width:0%; transition:width .6s ease}
+
+    /* table */
+    .table-wrap{max-height:260px; overflow:auto; margin-top:10px}
+    table.voters-table{width:100%;border-collapse:collapse;font-size:13px;}
+    table.voters-table th, table.voters-table td{padding:8px 10px;text-align:left;border-bottom:1px dashed rgba(255,255,255,0.02);color:var(--muted)}
+    table.voters-table th{color:var(--muted);font-weight:700;font-size:12px}
+    table.voters-table tr td:first-child{color:var(--muted); width:36px}
+    table.voters-table tbody tr:hover td{background:rgba(255,255,255,0.01)}
+
+    .admin-actions{display:flex;gap:8px; margin-top:12px; flex-wrap:wrap}
+
+    footer.site-footer{margin-top:20px;text-align:center;color:var(--muted);font-size:13px}
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="brand">
-        <h1>e-Voting OSIS</h1>
-        <p class="subtitle">SMKN 1 AMPELGADING — Pilih Ketua OSIS</p>
-      </div>
-      <div class="header-meta">
+  <div class="container">
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="brand">
+          <h1>e-Voting Ketua OSIS</h1>
+          <p class="subtitle">SMKN 1 AMPELGADING — Pemilos (Simulasi)</p>
+        </div>
         <div class="total-votes" id="totalVotes">Total suara: 0</div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <main class="container main-grid">
-    <!-- Left: Voting form -->
-    <section class="card form-card" aria-labelledby="form-title">
-      <div class="card-head">
+    <main class="main-grid">
+      <!-- Left: Form -->
+      <section class="card" aria-labelledby="form-title">
         <h2 id="form-title">Form Data Pemilih</h2>
-        <p class="muted">Isi data diri Anda sebelum memilih. Satu NIS hanya boleh dipakai sekali.</p>
-      </div>
+        <p class="muted">Isi data diri dengan lengkap. Satu NIS hanya boleh digunakan sekali. Data disimpan di browser (localStorage).</p>
 
-      <form id="voteForm" class="vote-form" autocomplete="off" novalidate>
-        <div class="field">
-          <label for="voterName">Nama Lengkap <span class="req">*</span></label>
-          <input id="voterName" name="voterName" type="text" required placeholder="Contoh: Budi Santoso" />
-        </div>
-
-        <div class="field-row">
+        <form id="voteForm" class="vote-form" autocomplete="off">
           <div class="field">
-            <label for="voterNIS">NIS / Nomor Induk Siswa <span class="req">*</span></label>
-            <input id="voterNIS" name="voterNIS" type="text" inputmode="numeric" required placeholder="Contoh: 12345678" />
+            <label for="voterName">Nama Lengkap <span style="color:#ffb86b">*</span></label>
+            <input id="voterName" name="voterName" type="text" required placeholder="Contoh: Budi Santoso" />
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="voterNIS">NIS / Nomor Induk Siswa <span style="color:#ffb86b">*</span></label>
+              <input id="voterNIS" name="voterNIS" type="text" required placeholder="Contoh: 12345678" />
+            </div>
+            <div class="field">
+              <label for="voterClass">Kelas <span style="color:#ffb86b">*</span></label>
+              <input id="voterClass" name="voterClass" type="text" required placeholder="Contoh: X TKJ 1" />
+            </div>
           </div>
 
           <div class="field">
-            <label for="voterClass">Kelas <span class="req">*</span></label>
-            <input id="voterClass" name="voterClass" type="text" required placeholder="Contoh: X TKJ 1" />
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="voterEmail">Email (opsional)</label>
-          <input id="voterEmail" name="voterEmail" type="email" placeholder="contoh@mail.com" />
-        </div>
-
-        <fieldset class="candidates" aria-label="Pilih Kandidat">
-          <legend>Pilih Kandidat <span class="req">*</span></legend>
-
-          <label class="candidate-card">
-            <input type="radio" name="candidate" value="cand1" required>
-            <div class="candidate-info">
-              <div class="avatar avatar--c1" aria-hidden="true">AP</div>
-              <div>
-                <div class="candidate-name">Aldi Pratama</div>
-                <div class="candidate-desc">Visi: Pendidikan Berkualitas & Prestasi Sekolah</div>
-              </div>
-            </div>
-          </label>
-
-          <label class="candidate-card">
-            <input type="radio" name="candidate" value="cand2">
-            <div class="candidate-info">
-              <div class="avatar avatar--c2" aria-hidden="true">RS</div>
-              <div>
-                <div class="candidate-name">Rina Salsabila</div>
-                <div class="candidate-desc">Visi: OSIS Inklusif & Kreativitas Siswa</div>
-              </div>
-            </div>
-          </label>
-
-          <label class="candidate-card">
-            <input type="radio" name="candidate" value="cand3">
-            <div class="candidate-info">
-              <div class="avatar avatar--c3" aria-hidden="true">DW</div>
-              <div>
-                <div class="candidate-name">Dani Wijaya</div>
-                <div class="candidate-desc">Visi: Transparansi & Dukungan Prestasi</div>
-              </div>
-            </div>
-          </label>
-        </fieldset>
-
-        <div class="form-actions">
-          <button type="submit" class="btn primary">Kirim Suara</button>
-          <button type="button" id="clearForm" class="btn ghost">Bersihkan</button>
-        </div>
-
-        <div id="formMessage" class="form-message" aria-live="polite"></div>
-      </form>
-    </section>
-
-    <!-- Right: Results & voters list -->
-    <aside>
-      <section class="card results-card" aria-labelledby="results-title">
-        <div class="card-head">
-          <h2 id="results-title">Hasil Sementara</h2>
-          <p class="muted">Perolehan suara dan daftar pemilih (disimpan di browser).</p>
-        </div>
-
-        <div class="results-overview">
-          <div class="candidate-result" data-id="cand1">
-            <div class="result-head">
-              <div class="avatar avatar--c1 small">AP</div>
-              <div class="result-meta">
-                <div class="candidate-name">Aldi Pratama</div>
-                <div class="muted small" id="count-cand1">0 suara</div>
-              </div>
-              <div class="percentage" id="pct-cand1">0%</div>
-            </div>
-            <div class="progress" aria-hidden="true">
-              <div class="progress-bar" id="bar-cand1" style="width:0%"></div>
-            </div>
+            <label for="voterEmail">Email (opsional)</label>
+            <input id="voterEmail" name="voterEmail" type="email" placeholder="contoh@mail.com" />
           </div>
 
-          <div class="candidate-result" data-id="cand2">
-            <div class="result-head">
-              <div class="avatar avatar--c2 small">RS</div>
-              <div class="result-meta">
-                <div class="candidate-name">Rina Salsabila</div>
-                <div class="muted small" id="count-cand2">0 suara</div>
+          <fieldset class="candidates" aria-label="Pilih Kandidat">
+            <legend style="font-weight:700; margin-bottom:8px">Pilih Kandidat <span style="color:#ffb86b">*</span></legend>
+
+            <label class="candidate-card" for="cand1">
+              <input id="cand1" type="radio" name="candidate" value="cand1" required>
+              <div class="candidate-info">
+                <div class="avatar avatar--c1" aria-hidden="true">AP</div>
+                <div>
+                  <div class="candidate-name">Aldi Pratama</div>
+                  <div class="candidate-desc">Visi: Meningkatkan mutu pembelajaran & kegiatan ekstrakurikuler.</div>
+                </div>
               </div>
-              <div class="percentage" id="pct-cand2">0%</div>
-            </div>
-            <div class="progress" aria-hidden="true">
-              <div class="progress-bar" id="bar-cand2" style="width:0%"></div>
-            </div>
-          </div>
+            </label>
 
-          <div class="candidate-result" data-id="cand3">
-            <div class="result-head">
-              <div class="avatar avatar--c3 small">DW</div>
-              <div class="result-meta">
-                <div class="candidate-name">Dani Wijaya</div>
-                <div class="muted small" id="count-cand3">0 suara</div>
+            <label class="candidate-card" for="cand2">
+              <input id="cand2" type="radio" name="candidate" value="cand2">
+              <div class="candidate-info">
+                <div class="avatar avatar--c2" aria-hidden="true">RS</div>
+                <div>
+                  <div class="candidate-name">Rina Salsabila</div>
+                  <div class="candidate-desc">Visi: OSIS inklusif & program pengembangan kreativitas siswa.</div>
+                </div>
               </div>
-              <div class="percentage" id="pct-cand3">0%</div>
-            </div>
-            <div class="progress" aria-hidden="true">
-              <div class="progress-bar" id="bar-cand3" style="width:0%"></div>
-            </div>
+            </label>
+
+            <label class="candidate-card" for="cand3">
+              <input id="cand3" type="radio" name="candidate" value="cand3">
+              <div class="candidate-info">
+                <div class="avatar avatar--c3" aria-hidden="true">DW</div>
+                <div>
+                  <div class="candidate-name">Dani Wijaya</div>
+                  <div class="candidate-desc">Visi: Transparansi kegiatan & dukungan bagi prestasi siswa.</div>
+                </div>
+              </div>
+            </label>
+          </fieldset>
+
+          <div class="form-actions">
+            <button type="submit" class="btn primary">Kirim Suara</button>
+            <button type="button" id="clearForm" class="btn ghost">Bersihkan</button>
           </div>
-        </div>
+        </form>
 
-        <hr class="sep">
-
-        <div class="results-detail">
-          <h3>Daftar Pemilih & Pilihan</h3>
-          <div class="table-wrap">
-            <table class="voters-table" id="votersTable" aria-live="polite">
-              <thead>
-                <tr><th>#</th><th>Nama</th><th>NIS</th><th>Kelas</th><th>Pilih</th><th>Waktu</th></tr>
-              </thead>
-              <tbody>
-                <!-- rows inserted by JS -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="admin-actions">
-          <button id="exportBtn" class="btn">Export CSV</button>
-          <button id="resetBtn" class="btn danger">Reset Semua (Admin)</button>
-        </div>
+        <div id="formMessage" class="form-message" aria-live="polite" style="display:none"></div>
       </section>
-    </aside>
-  </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <small>Hak cipta © SMKN 1 AMPELGADING • Sistem e-Voting sederhana — data disimpan di browser (localStorage)</small>
-    </div>
-  </footer>
+      <!-- Right: Results -->
+      <aside>
+        <section class="card" aria-labelledby="results-title">
+          <h2 id="results-title">Hasil Sementara</h2>
+
+          <div class="results-overview" id="resultsOverview">
+            <div class="candidate-result" data-id="cand1">
+              <div class="result-head">
+                <div class="avatar avatar--c1 small">AP</div>
+                <div>
+                  <div class="candidate-name">Aldi Pratama</div>
+                  <div class="muted small" id="count-cand1">0 suara</div>
+                </div>
+                <div class="percentage" id="pct-cand1">0%</div>
+              </div>
+              <div class="progress" aria-hidden="true">
+                <div class="progress-bar" id="bar-cand1" style="width:0%"></div>
+              </div>
+            </div>
+
+            <div class="candidate-result" data-id="cand2">
+              <div class="result-head">
+                <div class="avatar avatar--c2 small">RS</div>
+                <div>
+                  <div class="candidate-name">Rina Salsabila</div>
+                  <div class="muted small" id="count-cand2">0 suara</div>
+                </div>
+                <div class="percentage" id="pct-cand2">0%</div>
+              </div>
+              <div class="progress" aria-hidden="true">
+                <div class="progress-bar" id="bar-cand2" style="width:0%"></div>
+              </div>
+            </div>
+
+            <div class="candidate-result" data-id="cand3">
+              <div class="result-head">
+                <div class="avatar avatar--c3 small">DW</div>
+                <div>
+                  <div class="candidate-name">Dani Wijaya</div>
+                  <div class="muted small" id="count-cand3">0 suara</div>
+                </div>
+                <div class="percentage" id="pct-cand3">0%</div>
+              </div>
+              <div class="progress" aria-hidden="true">
+                <div class="progress-bar" id="bar-cand3" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:14px 0">
+
+          <div class="results-detail">
+            <h3 style="margin:0 0 8px 0">Daftar Pemilih & Pilihan</h3>
+            <div class="table-wrap">
+              <table class="voters-table" id="votersTable" aria-live="polite">
+                <thead>
+                  <tr><th>#</th><th>Nama</th><th>NIS</th><th>Kelas</th><th>Pilih</th><th>Waktu</th></tr>
+                </thead>
+                <tbody>
+                  <!-- diisi oleh JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="admin-actions">
+            <button id="exportBtn" class="btn">Export CSV</button>
+            <button id="resetBtn" class="btn danger">Reset Semua (Admin)</button>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <small>Hak cipta © SMKN 1 AMPELGADING • Simulasi e-Voting — Data tersimpan di browser (localStorage)</small>
+    </footer>
+  </div>
 
   <script>
     (function () {
-      // Kandidat
+      // Konfigurasi kandidat
       const CANDIDATES = {
         cand1: { name: 'Aldi Pratama' },
         cand2: { name: 'Rina Salsabila' },
         cand3: { name: 'Dani Wijaya' }
       };
 
-      // Keys
-      const STORAGE_VOTERS = 'evote_voters_v2';
-      const STORAGE_COUNTS = 'evote_counts_v2';
+      // Kunci localStorage
+      const STORAGE_VOTERS = 'evote_voters_v1';
+      const STORAGE_COUNTS = 'evote_counts_v1';
 
-      // Elements
+      // Elemen
       const form = document.getElementById('voteForm');
       const msg = document.getElementById('formMessage');
       const totalVotesEl = document.getElementById('totalVotes');
@@ -455,7 +373,7 @@ body{
       const resetBtn = document.getElementById('resetBtn');
       const clearFormBtn = document.getElementById('clearForm');
 
-      // Helpers
+      // util: load & save JSON
       function loadJson(key, fallback) {
         try {
           const raw = localStorage.getItem(key);
@@ -469,6 +387,7 @@ body{
         localStorage.setItem(key, JSON.stringify(value));
       }
 
+      // inisialisasi bila belum ada
       function ensureInit() {
         let counts = loadJson(STORAGE_COUNTS, null);
         if (!counts) {
@@ -477,18 +396,12 @@ body{
         }
         let voters = loadJson(STORAGE_VOTERS, null);
         if (!voters) {
-          voters = []; // each: {name,nis,kelas,email,candidate,time}
+          voters = []; // {name,nis,kelas,email,candidate,time}
           saveJson(STORAGE_VOTERS, voters);
         }
       }
 
-      function escapeHtml(s) {
-        if (s === undefined || s === null) return '';
-        return String(s).replace(/[&<>"']/g, function (c) {
-          return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-        });
-      }
-
+      // render UI
       function renderAll() {
         const counts = loadJson(STORAGE_COUNTS, { cand1:0,cand2:0,cand3:0 });
         const voters = loadJson(STORAGE_VOTERS, []);
@@ -504,10 +417,16 @@ body{
           const pct = total === 0 ? 0 : Math.round((count / total) * 100);
           if (countEl) countEl.textContent = `${count} suara`;
           if (pctEl) pctEl.textContent = `${pct}%`;
-          if (barEl) barEl.style.width = `${pct}%`;
+          if (barEl) {
+            barEl.style.width = pct + '%';
+            // color per kandidat (subtle)
+            if (id === 'cand1') barEl.style.background = 'linear-gradient(90deg, rgba(124,58,237,0.9), rgba(91,33,182,0.9))';
+            if (id === 'cand2') barEl.style.background = 'linear-gradient(90deg, rgba(6,182,212,0.9), rgba(3,105,161,0.9))';
+            if (id === 'cand3') barEl.style.background = 'linear-gradient(90deg, rgba(245,158,11,0.9), rgba(180,83,9,0.9))';
+          }
         });
 
-        // Render voters (most recent first)
+        // daftar pemilih: paling terbaru di atas
         votersTableBody.innerHTML = '';
         voters.slice().reverse().forEach((v, idx) => {
           const tr = document.createElement('tr');
@@ -517,24 +436,25 @@ body{
             <td>${escapeHtml(v.name)}</td>
             <td>${escapeHtml(v.nis)}</td>
             <td>${escapeHtml(v.kelas)}</td>
-            <td>${CANDIDATES[v.candidate]?.name || v.candidate}</td>
+            <td>${escapeHtml(CANDIDATES[v.candidate]?.name || v.candidate)}</td>
             <td>${new Date(v.time).toLocaleString()}</td>
           `;
           votersTableBody.appendChild(tr);
         });
       }
 
-      function showMessage(text, type) {
-        msg.textContent = text;
-        msg.className = 'form-message ' + (type || '');
-        setTimeout(() => { msg.className = 'form-message'; }, 6000);
+      // escape sederhana
+      function escapeHtml(s) {
+        if (!s) return '';
+        return String(s).replace(/[&<>"']/g, function (c) {
+          return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+        });
       }
 
-      // Submit
+      // submit form
       form.addEventListener('submit', function (e) {
         e.preventDefault();
-        msg.textContent = '';
-
+        showMessage('', '');
         const name = form.voterName.value.trim();
         const nis = form.voterNIS.value.trim();
         const kelas = form.voterClass.value.trim();
@@ -542,19 +462,19 @@ body{
         const candidate = form.candidate.value;
 
         if (!name || !nis || !kelas || !candidate) {
-          showMessage('Mohon lengkapi semua field yang wajib.', 'error');
+          showMessage('Mohon lengkapi semua data yang wajib.', 'error');
           return;
         }
 
-        // Duplicate NIS check
+        // cek duplikat NIS (case-insensitive)
         const voters = loadJson(STORAGE_VOTERS, []);
-        const already = voters.find(v => v.nis === nis);
+        const already = voters.find(v => v.nis.toLowerCase() === nis.toLowerCase());
         if (already) {
-          showMessage('NIS sudah digunakan. Satu NIS = 1 suara.', 'error');
+          showMessage('NIS ini sudah digunakan untuk memilih sebelumnya. Satu NIS = 1 suara.', 'error');
           return;
         }
 
-        // Save
+        // rekam suara
         const now = Date.now();
         voters.push({ name, nis, kelas, email, candidate, time: now });
         saveJson(STORAGE_VOTERS, voters);
@@ -563,18 +483,26 @@ body{
         counts[candidate] = (counts[candidate] || 0) + 1;
         saveJson(STORAGE_COUNTS, counts);
 
-        showMessage('Terima kasih! Suara Anda telah direkam.', 'success');
+        showMessage('Terima kasih! Suara Anda berhasil direkam.', 'success');
         form.reset();
         renderAll();
       });
 
-      // Clear
-      clearFormBtn.addEventListener('click', function () {
-        form.reset();
-        msg.textContent = '';
-      });
+      // pesan di bawah form
+      function showMessage(text, type) {
+        if (!text) {
+          msg.style.display = 'none';
+          msg.textContent = '';
+          msg.className = 'form-message';
+          return;
+        }
+        msg.style.display = 'inline-block';
+        msg.textContent = text;
+        msg.className = 'form-message ' + (type || '');
+        setTimeout(() => { msg.className = 'form-message'; }, 6000);
+      }
 
-      // Export CSV
+      // export CSV
       exportBtn.addEventListener('click', function () {
         const voters = loadJson(STORAGE_VOTERS, []);
         if (!voters.length) {
@@ -588,49 +516,4 @@ body{
           escapeCsv(v.kelas),
           escapeCsv(v.email || ''),
           escapeCsv(CANDIDATES[v.candidate]?.name || v.candidate),
-          new Date(v.time).toLocaleString()
-        ]);
-        const csvContent = [header].concat(rows).map(r => r.join(',')).join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'evote_pemilos_voters.csv';
-        a.click();
-        URL.revokeObjectURL(url);
-      });
-
-      function escapeCsv(s) {
-        if (s === null || s === undefined) return '';
-        const str = String(s);
-        if (str.includes(',') || str.includes('"') || str.includes('\n')) {
-          return '"' + str.replace(/"/g, '""') + '"';
-        }
-        return str;
-      }
-
-      // Reset admin
-      resetBtn.addEventListener('click', function () {
-        const adminKey = prompt('Masukkan kata sandi admin untuk mereset semua data (ketik: admin-reset):');
-        if (adminKey !== 'admin-reset') {
-          alert('Kata sandi salah. Reset dibatalkan.');
-          return;
-        }
-        if (!confirm('Anda yakin akan menghapus semua suara dan data pemilih? Tindakan ini tidak bisa dibatalkan.')) return;
-        localStorage.removeItem(STORAGE_VOTERS);
-        localStorage.removeItem(STORAGE_COUNTS);
-        ensureInit();
-        renderAll();
-        alert('Semua data telah direset.');
-      });
-
-      // Init
-      ensureInit();
-      renderAll();
-
-      // For dev debugging (optional)
-      window._evote = { loadJson, saveJson };
-    })();
-  </script>
-</body>
-    </html>
+          new Date(v.time).toLocaleS

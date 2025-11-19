@@ -4,6 +4,255 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>e-Voting Ketua OSIS — SMKN 1 AMPELGADING</title>
+  <style>
+    :root{
+  --bg-1: #071428;
+  --bg-2: #071a2a;
+  --card: rgba(255,255,255,0.03);
+  --muted: #9fb0c7;
+  --accent-1: #7c3aed;
+  --accent-2: #06b6d4;
+  --success: #10b981;
+  --danger: #ef4444;
+  --text: #eaf2fb;
+  --glass: rgba(255,255,255,0.03);
+  --radius: 14px;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Reset */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background: radial-gradient(600px 300px at 10% 10%, rgba(124,58,237,0.08), transparent 15%),
+              radial-gradient(600px 300px at 90% 90%, rgba(6,182,212,0.05), transparent 15%),
+              linear-gradient(180deg,var(--bg-1),var(--bg-2));
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  padding-bottom:40px;
+  line-height:1.35;
+}
+
+/* Layout container */
+.container{
+  width:92%;
+  max-width:1100px;
+  margin:0 auto;
+}
+
+/* Header */
+.header-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:28px 0;
+}
+.brand h1{
+  margin:0;
+  font-size:20px;
+  letter-spacing:0.6px;
+  background: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.subtitle{
+  margin:6px 0 0 0;
+  color:var(--muted);
+  font-size:13px;
+}
+.header-meta .total-votes{
+  background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:600;
+  color:var(--muted);
+}
+
+/* Main Grid */
+.main-grid{
+  display:grid;
+  grid-template-columns: 1fr 420px;
+  gap:26px;
+  align-items:start;
+  margin-top:10px;
+}
+
+/* Card */
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: var(--radius);
+  padding:18px;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.6);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+/* Card head */
+.card-head h2{
+  margin:0 0 6px 0;
+  font-size:18px;
+}
+.card-head p.muted{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* Form styles */
+.vote-form .field{margin-top:14px}
+.field label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
+.field input[type="text"],
+.field input[type="email"]{
+  width:100%;
+  padding:10px 12px;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.03);
+  color:var(--text);
+  border-radius:10px;
+  outline:none;
+  transition:box-shadow .18s, border-color .18s;
+}
+.field input:focus{
+  box-shadow:0 6px 18px rgba(124,58,237,0.08);
+  border-color: rgba(124,58,237,0.6);
+}
+
+/* Field row */
+.field-row{
+  display:flex;
+  gap:12px;
+}
+.field-row .field{flex:1}
+
+/* Candidates */
+.candidates{
+  margin-top:16px;
+  display:flex;
+  gap:10px;
+  flex-direction:column;
+}
+.candidate-card{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px;
+  border-radius:10px;
+  cursor:pointer;
+  background: linear-gradient(90deg, rgba(255,255,255,0.01), transparent);
+  border:1px solid rgba(255,255,255,0.02);
+  transition:transform .12s, box-shadow .12s, border-color .12s;
+}
+.candidate-card input[type="radio"]{display:none}
+.candidate-card .candidate-info{display:flex;align-items:center;gap:12px}
+.candidate-card .candidate-name{font-weight:600}
+.candidate-card .candidate-desc{color:var(--muted);font-size:13px}
+.candidate-card:hover{transform:translateY(-4px); box-shadow: 0 12px 30px rgba(3,7,30,0.6);}
+
+/* Avatar variants */
+.avatar{
+  width:56px;
+  height:56px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  color:white;
+  font-size:16px;
+}
+.avatar--c1{background: linear-gradient(135deg,#7c3aed,#5b21b6)}
+.avatar--c2{background: linear-gradient(135deg,#06b6d4,#0891b2)}
+.avatar--c3{background: linear-gradient(135deg,#f97316,#ef4444)}
+
+/* When selected radio */
+.candidate-card input:checked + .candidate-info,
+.candidate-card input:checked ~ .candidate-info { /* fallback */
+  border-left: 3px solid rgba(255,255,255,0.02);
+}
+
+/* Buttons */
+.form-actions{display:flex;gap:10px;margin-top:16px}
+.btn{
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.04);
+  background:transparent;
+  color:var(--text);
+  cursor:pointer;
+  font-weight:600;
+}
+.btn.primary{
+  background: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+  border: none;
+  color: white;
+  box-shadow: 0 8px 26px rgba(7,12,40,0.5);
+}
+.btn.ghost{
+  background: rgba(255,255,255,0.02);
+}
+.btn.danger{
+  background: linear-gradient(90deg,#ef4444,#f97316);
+  color:white;
+  border:none;
+}
+
+/* Form message */
+.form-message{
+  margin-top:12px;
+  padding:10px 12px;
+  border-radius:10px;
+  color:var(--text);
+}
+.form-message.success{background: rgba(16,185,129,0.12); color:var(--success); border:1px solid rgba(16,185,129,0.12)}
+.form-message.error{background: rgba(239,68,68,0.08); color:var(--danger); border:1px solid rgba(239,68,68,0.06)}
+
+/* Results */
+.results-overview{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.candidate-result{
+  padding:10px;
+  border-radius:10px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.01), transparent);
+  border:1px solid rgba(255,255,255,0.02);
+}
+.result-head{display:flex;align-items:center;gap:12px}
+.result-head .small{width:44px;height:44px;border-radius:10px}
+.result-meta{flex:1}
+.percentage{font-weight:700;color:var(--muted)}
+.progress{height:10px;background:rgba(255,255,255,0.02);border-radius:10px;margin-top:8px;overflow:hidden}
+.progress-bar{
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+  border-radius:10px;
+  transition:width .6s ease;
+}
+
+/* Smaller avatars */
+.avatar.small{width:44px;height:44px;border-radius:10px;font-size:13px}
+
+/* Table */
+.table-wrap{margin-top:10px; max-height:240px; overflow:auto; border-radius:10px}
+.voters-table{width:100%; border-collapse:collapse; font-size:13px; min-width:600px}
+.voters-table thead th{position:sticky; top:0; background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:8px; text-align:left; color:var(--muted)}
+.voters-table tbody td{padding:10px;border-top:1px solid rgba(255,255,255,0.02); color:var(--text)}
+.sep{border:none;height:1px;background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent); margin:12px 0}
+
+/* Admin actions */
+.admin-actions{display:flex;gap:10px;margin-top:12px;align-items:center}
+
+/* Footer */
+.site-footer{margin-top:28px;padding:18px 0;color:var(--muted);text-align:center;font-size:13px}
+
+/* Responsive */
+@media (max-width:980px){
+  .main-grid{grid-template-columns: 1fr; padding-bottom:30px}
+  aside{order:2}
+  .form-card{order:1}
+  .voters-table{min-width:0}
+  }
+  </style>
   <meta name="description" content="Sistem e-voting sederhana untuk pemilihan Ketua OSIS SMKN 1 AMPELGADING — form data pemilih, 3 kandidat, dan hasil voting real-time." />
 
   <!-- Google font -->

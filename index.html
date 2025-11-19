@@ -1,1 +1,387 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>e-Voting Ketua OSIS — SMKN 1 AMPELGADING</title>
+  <meta name="description" content="Sistem e-voting sederhana untuk pemilihan Ketua OSIS SMKN 1 AMPELGADING — form data pemilih, 3 kandidat, dan hasil voting real-time." />
 
+  <!-- Google font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <h1>e-Voting OSIS</h1>
+        <p class="subtitle">SMKN 1 AMPELGADING — Pilih Ketua OSIS</p>
+      </div>
+      <div class="header-meta">
+        <div class="total-votes" id="totalVotes">Total suara: 0</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main-grid">
+    <!-- Left: Voting form -->
+    <section class="card form-card" aria-labelledby="form-title">
+      <div class="card-head">
+        <h2 id="form-title">Form Data Pemilih</h2>
+        <p class="muted">Isi data diri Anda sebelum memilih. Satu NIS hanya boleh dipakai sekali.</p>
+      </div>
+
+      <form id="voteForm" class="vote-form" autocomplete="off" novalidate>
+        <div class="field">
+          <label for="voterName">Nama Lengkap <span class="req">*</span></label>
+          <input id="voterName" name="voterName" type="text" required placeholder="Contoh: Budi Santoso" />
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="voterNIS">NIS / Nomor Induk Siswa <span class="req">*</span></label>
+            <input id="voterNIS" name="voterNIS" type="text" inputmode="numeric" required placeholder="Contoh: 12345678" />
+          </div>
+
+          <div class="field">
+            <label for="voterClass">Kelas <span class="req">*</span></label>
+            <input id="voterClass" name="voterClass" type="text" required placeholder="Contoh: X TKJ 1" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="voterEmail">Email (opsional)</label>
+          <input id="voterEmail" name="voterEmail" type="email" placeholder="contoh@mail.com" />
+        </div>
+
+        <fieldset class="candidates" aria-label="Pilih Kandidat">
+          <legend>Pilih Kandidat <span class="req">*</span></legend>
+
+          <label class="candidate-card">
+            <input type="radio" name="candidate" value="cand1" required>
+            <div class="candidate-info">
+              <div class="avatar avatar--c1" aria-hidden="true">AP</div>
+              <div>
+                <div class="candidate-name">Aldi Pratama</div>
+                <div class="candidate-desc">Visi: Pendidikan Berkualitas & Prestasi Sekolah</div>
+              </div>
+            </div>
+          </label>
+
+          <label class="candidate-card">
+            <input type="radio" name="candidate" value="cand2">
+            <div class="candidate-info">
+              <div class="avatar avatar--c2" aria-hidden="true">RS</div>
+              <div>
+                <div class="candidate-name">Rina Salsabila</div>
+                <div class="candidate-desc">Visi: OSIS Inklusif & Kreativitas Siswa</div>
+              </div>
+            </div>
+          </label>
+
+          <label class="candidate-card">
+            <input type="radio" name="candidate" value="cand3">
+            <div class="candidate-info">
+              <div class="avatar avatar--c3" aria-hidden="true">DW</div>
+              <div>
+                <div class="candidate-name">Dani Wijaya</div>
+                <div class="candidate-desc">Visi: Transparansi & Dukungan Prestasi</div>
+              </div>
+            </div>
+          </label>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="submit" class="btn primary">Kirim Suara</button>
+          <button type="button" id="clearForm" class="btn ghost">Bersihkan</button>
+        </div>
+
+        <div id="formMessage" class="form-message" aria-live="polite"></div>
+      </form>
+    </section>
+
+    <!-- Right: Results & voters list -->
+    <aside>
+      <section class="card results-card" aria-labelledby="results-title">
+        <div class="card-head">
+          <h2 id="results-title">Hasil Sementara</h2>
+          <p class="muted">Perolehan suara dan daftar pemilih (disimpan di browser).</p>
+        </div>
+
+        <div class="results-overview">
+          <div class="candidate-result" data-id="cand1">
+            <div class="result-head">
+              <div class="avatar avatar--c1 small">AP</div>
+              <div class="result-meta">
+                <div class="candidate-name">Aldi Pratama</div>
+                <div class="muted small" id="count-cand1">0 suara</div>
+              </div>
+              <div class="percentage" id="pct-cand1">0%</div>
+            </div>
+            <div class="progress" aria-hidden="true">
+              <div class="progress-bar" id="bar-cand1" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div class="candidate-result" data-id="cand2">
+            <div class="result-head">
+              <div class="avatar avatar--c2 small">RS</div>
+              <div class="result-meta">
+                <div class="candidate-name">Rina Salsabila</div>
+                <div class="muted small" id="count-cand2">0 suara</div>
+              </div>
+              <div class="percentage" id="pct-cand2">0%</div>
+            </div>
+            <div class="progress" aria-hidden="true">
+              <div class="progress-bar" id="bar-cand2" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div class="candidate-result" data-id="cand3">
+            <div class="result-head">
+              <div class="avatar avatar--c3 small">DW</div>
+              <div class="result-meta">
+                <div class="candidate-name">Dani Wijaya</div>
+                <div class="muted small" id="count-cand3">0 suara</div>
+              </div>
+              <div class="percentage" id="pct-cand3">0%</div>
+            </div>
+            <div class="progress" aria-hidden="true">
+              <div class="progress-bar" id="bar-cand3" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="sep">
+
+        <div class="results-detail">
+          <h3>Daftar Pemilih & Pilihan</h3>
+          <div class="table-wrap">
+            <table class="voters-table" id="votersTable" aria-live="polite">
+              <thead>
+                <tr><th>#</th><th>Nama</th><th>NIS</th><th>Kelas</th><th>Pilih</th><th>Waktu</th></tr>
+              </thead>
+              <tbody>
+                <!-- rows inserted by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="admin-actions">
+          <button id="exportBtn" class="btn">Export CSV</button>
+          <button id="resetBtn" class="btn danger">Reset Semua (Admin)</button>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>Hak cipta © SMKN 1 AMPELGADING • Sistem e-Voting sederhana — data disimpan di browser (localStorage)</small>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      // Kandidat
+      const CANDIDATES = {
+        cand1: { name: 'Aldi Pratama' },
+        cand2: { name: 'Rina Salsabila' },
+        cand3: { name: 'Dani Wijaya' }
+      };
+
+      // Keys
+      const STORAGE_VOTERS = 'evote_voters_v2';
+      const STORAGE_COUNTS = 'evote_counts_v2';
+
+      // Elements
+      const form = document.getElementById('voteForm');
+      const msg = document.getElementById('formMessage');
+      const totalVotesEl = document.getElementById('totalVotes');
+      const votersTableBody = document.querySelector('#votersTable tbody');
+      const exportBtn = document.getElementById('exportBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const clearFormBtn = document.getElementById('clearForm');
+
+      // Helpers
+      function loadJson(key, fallback) {
+        try {
+          const raw = localStorage.getItem(key);
+          if (!raw) return fallback;
+          return JSON.parse(raw);
+        } catch (e) {
+          return fallback;
+        }
+      }
+      function saveJson(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+      }
+
+      function ensureInit() {
+        let counts = loadJson(STORAGE_COUNTS, null);
+        if (!counts) {
+          counts = { cand1: 0, cand2: 0, cand3: 0 };
+          saveJson(STORAGE_COUNTS, counts);
+        }
+        let voters = loadJson(STORAGE_VOTERS, null);
+        if (!voters) {
+          voters = []; // each: {name,nis,kelas,email,candidate,time}
+          saveJson(STORAGE_VOTERS, voters);
+        }
+      }
+
+      function escapeHtml(s) {
+        if (s === undefined || s === null) return '';
+        return String(s).replace(/[&<>"']/g, function (c) {
+          return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+        });
+      }
+
+      function renderAll() {
+        const counts = loadJson(STORAGE_COUNTS, { cand1:0,cand2:0,cand3:0 });
+        const voters = loadJson(STORAGE_VOTERS, []);
+        const total = Object.values(counts).reduce((a,b)=>a+b,0);
+
+        totalVotesEl.textContent = `Total suara: ${total}`;
+
+        ['cand1','cand2','cand3'].forEach(id => {
+          const countEl = document.getElementById('count-' + id);
+          const pctEl = document.getElementById('pct-' + id);
+          const barEl = document.getElementById('bar-' + id);
+          const count = counts[id] || 0;
+          const pct = total === 0 ? 0 : Math.round((count / total) * 100);
+          if (countEl) countEl.textContent = `${count} suara`;
+          if (pctEl) pctEl.textContent = `${pct}%`;
+          if (barEl) barEl.style.width = `${pct}%`;
+        });
+
+        // Render voters (most recent first)
+        votersTableBody.innerHTML = '';
+        voters.slice().reverse().forEach((v, idx) => {
+          const tr = document.createElement('tr');
+          const rowIndex = voters.length - idx;
+          tr.innerHTML = `
+            <td>${rowIndex}</td>
+            <td>${escapeHtml(v.name)}</td>
+            <td>${escapeHtml(v.nis)}</td>
+            <td>${escapeHtml(v.kelas)}</td>
+            <td>${CANDIDATES[v.candidate]?.name || v.candidate}</td>
+            <td>${new Date(v.time).toLocaleString()}</td>
+          `;
+          votersTableBody.appendChild(tr);
+        });
+      }
+
+      function showMessage(text, type) {
+        msg.textContent = text;
+        msg.className = 'form-message ' + (type || '');
+        setTimeout(() => { msg.className = 'form-message'; }, 6000);
+      }
+
+      // Submit
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        msg.textContent = '';
+
+        const name = form.voterName.value.trim();
+        const nis = form.voterNIS.value.trim();
+        const kelas = form.voterClass.value.trim();
+        const email = form.voterEmail.value.trim();
+        const candidate = form.candidate.value;
+
+        if (!name || !nis || !kelas || !candidate) {
+          showMessage('Mohon lengkapi semua field yang wajib.', 'error');
+          return;
+        }
+
+        // Duplicate NIS check
+        const voters = loadJson(STORAGE_VOTERS, []);
+        const already = voters.find(v => v.nis === nis);
+        if (already) {
+          showMessage('NIS sudah digunakan. Satu NIS = 1 suara.', 'error');
+          return;
+        }
+
+        // Save
+        const now = Date.now();
+        voters.push({ name, nis, kelas, email, candidate, time: now });
+        saveJson(STORAGE_VOTERS, voters);
+
+        const counts = loadJson(STORAGE_COUNTS, { cand1:0,cand2:0,cand3:0 });
+        counts[candidate] = (counts[candidate] || 0) + 1;
+        saveJson(STORAGE_COUNTS, counts);
+
+        showMessage('Terima kasih! Suara Anda telah direkam.', 'success');
+        form.reset();
+        renderAll();
+      });
+
+      // Clear
+      clearFormBtn.addEventListener('click', function () {
+        form.reset();
+        msg.textContent = '';
+      });
+
+      // Export CSV
+      exportBtn.addEventListener('click', function () {
+        const voters = loadJson(STORAGE_VOTERS, []);
+        if (!voters.length) {
+          alert('Belum ada data pemilih untuk diekspor.');
+          return;
+        }
+        const header = ['Nama','NIS','Kelas','Email','Kandidat','Waktu'];
+        const rows = voters.map(v => [
+          escapeCsv(v.name),
+          escapeCsv(v.nis),
+          escapeCsv(v.kelas),
+          escapeCsv(v.email || ''),
+          escapeCsv(CANDIDATES[v.candidate]?.name || v.candidate),
+          new Date(v.time).toLocaleString()
+        ]);
+        const csvContent = [header].concat(rows).map(r => r.join(',')).join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'evote_pemilos_voters.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      function escapeCsv(s) {
+        if (s === null || s === undefined) return '';
+        const str = String(s);
+        if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+          return '"' + str.replace(/"/g, '""') + '"';
+        }
+        return str;
+      }
+
+      // Reset admin
+      resetBtn.addEventListener('click', function () {
+        const adminKey = prompt('Masukkan kata sandi admin untuk mereset semua data (ketik: admin-reset):');
+        if (adminKey !== 'admin-reset') {
+          alert('Kata sandi salah. Reset dibatalkan.');
+          return;
+        }
+        if (!confirm('Anda yakin akan menghapus semua suara dan data pemilih? Tindakan ini tidak bisa dibatalkan.')) return;
+        localStorage.removeItem(STORAGE_VOTERS);
+        localStorage.removeItem(STORAGE_COUNTS);
+        ensureInit();
+        renderAll();
+        alert('Semua data telah direset.');
+      });
+
+      // Init
+      ensureInit();
+      renderAll();
+
+      // For dev debugging (optional)
+      window._evote = { loadJson, saveJson };
+    })();
+  </script>
+</body>
+    </html>
